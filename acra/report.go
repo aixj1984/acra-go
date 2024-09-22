@@ -71,10 +71,12 @@ type Report struct {
 		UserSetLocale               bool   `json:"userSetLocale" form:"userSetLocale"`
 	} `json:"CRASH_CONFIGURATION" form:"CRASH_CONFIGURATION"`
 
-	CustomData struct {
-		Multiline string `json:"MULTILINE" form:"MULTILINE"`
-		NoValue   string `json:"NO_VALUE" form:"NO_VALUE"`
-	} `json:"CUSTOM_DATA" form:"CUSTOM_DATA"`
+	//CustomData struct {
+	//	Multiline string `json:"MULTILINE" form:"MULTILINE"`
+	//	NoValue   string `json:"NO_VALUE" form:"NO_VALUE"`
+	//} `json:"CUSTOM_DATA" form:"CUSTOM_DATA"`
+
+	CustomData map[string]string `json:"CUSTOM_DATA" form:"CUSTOM_DATA"`
 
 	DeviceFeatures struct {
 		AndroidHardwareBluetooth                     bool   `json:"android.hardware.bluetooth" form:"android.hardware.bluetooth"`

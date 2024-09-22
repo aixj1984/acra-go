@@ -1,7 +1,10 @@
 package server
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 
 	"github.com/nu7hatch/gouuid"
@@ -38,6 +41,19 @@ func (b *Backend) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	report := acra.Report{}
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "can't read body", http.StatusBadRequest)
+		return
+	}
+
+	// 打印请求体
+	//fmt.Println(string(body))
+
+	// 将读取的内容再次放回到r.Body中，以便后续的处理器可以继续读取
+	r.Body = io.NopCloser(bytes.NewBuffer(body))
+
 	decoder := acra.NewDecoder(r.Body)
 
 	err = decoder.Decode(&report)
@@ -46,6 +62,10 @@ func (b *Backend) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, msg, http.StatusBadRequest)
 		return
 	}
+
+	jsonData, _ := json.Marshal(report)
+
+	fmt.Printf("send body : %+v\n", string(jsonData))
 
 	defer r.Body.Close()
 
